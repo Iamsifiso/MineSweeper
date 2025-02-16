@@ -31,11 +31,11 @@ public class MineSweeper {
             // Easy mode (Default mode)
             // row = 12, col = 6, mines = 10
 
-            row = 25;
-            col = 13;
+            row = 27;
+            col = 15;
             board = new String [row][col];
 
-            StdOut.println("========Easy-Mode========");
+            StdOut.println("  ==========Easy-Mode==========");
 
             initBoard(board);
             drawBoard(board);
@@ -43,26 +43,26 @@ public class MineSweeper {
         } else if (mode == 1) {
             // Medium mode
             // row = 20, col = 10, mines = 35
-            row = 41;
-            col = 21;
+            row = 43;
+            col = 23;
             board = new String [row][col];
 
-            StdOut.println("===============Medium-Mode===============");
+            StdOut.println("  =================Medium-Mode=================");
 
             initBoard(board);
             drawBoard(board);
 
-            
+            // StdIn
 
         } else if (mode == 2) {
             // Hard mode
             // row = 28, col = 13, mines = 75
 
-            row = 57;
-            col = 27;
+            row = 59;
+            col = 29;
             board = new String [row][col];
 
-            StdOut.println("======================Hard-Mode======================");
+            StdOut.println("  ========================Hard-Mode========================");
             
             initBoard(board);
             drawBoard(board);
@@ -76,42 +76,42 @@ public class MineSweeper {
 
         // Insert corners
 
-        board[0][0] = TOP_LEFT_CORNER;
-        board[0][board[0].length - 1] = TOP_RIGHT_CORNER;
-        board[board.length - 1][0] = BOTTOM_LEFT_CORNER;
-        board[board.length - 1][board[0].length - 1] = BOTTOM_RIGHT_CORNER;
+        board[1][1] = TOP_LEFT_CORNER;
+        board[1][board[0].length - 2] = TOP_RIGHT_CORNER;
+        board[board.length - 2][1] = BOTTOM_LEFT_CORNER;
+        board[board.length - 2][board[0].length - 2] = BOTTOM_RIGHT_CORNER;
 
         // Insert horizontal boarders
-        for (int i = 0; i < board.length; i += 2) {
-            for (int j = 1; j < board[0].length; j += 2) {
+        for (int i = 1; i < board.length - 1; i += 2) {
+            for (int j = 2; j < board[0].length -1; j += 2) {
                 board[i][j] = H_BORDER;
             }
         }
 
         // Insert vertical boarders
-        for (int i = 1; i < board.length; i += 2) {
-            for (int j = 0; j < board[0].length; j += 2) {
+        for (int i = 2; i < board.length - 1; i += 2) {
+            for (int j = 1; j < board[0].length - 1; j += 2) {
                 board[i][j] = V_BORDER;
             }
         }
         
         // Insert horizontal junctions
-        for (int i = 0; i < board.length; i += 2) {
-            for (int j = 2; j < board[0].length - 1; j += 2) {
-                if (i == 0) {
+        for (int i = 1; i < board.length - 1; i += 2) {
+            for (int j = 3; j < board[0].length - 2; j += 2) {
+                if (i == 1) {
                     board[i][j] = TOP_JUNCTION;
-                } else if (i == board.length - 1) {
+                } else if (i == board.length - 2) {
                     board[i][j] = BOTTOM_JUNCTION;
                 }
             }
         }
         
         // Insert vertical junctions
-        for (int i = 2; i < board.length - 1; i += 2) {
-            for (int j = 0; j < board[0].length; j += 2) {
-                if (j == 0) {
+        for (int i = 3; i < board.length - 2; i += 2) {
+            for (int j = 1; j < board[0].length - 1; j += 2) {
+                if (j == 1) {
                     board[i][j] = LEFT_JUNCTION;
-                } else if (j == board[0].length - 1) {
+                } else if (j == board[0].length - 2) {
                     board[i][j] = RIGHT_JUNCTION;
                 }
             }
@@ -119,16 +119,76 @@ public class MineSweeper {
         
 
         // Insert intersections
-        for (int i = 2; i < board.length - 1; i += 2) {
-            for (int j = 2; j < board[0].length - 1; j += 2) {
+        for (int i = 3; i < board.length - 2; i += 2) {
+            for (int j = 3; j < board[0].length - 2; j += 2) {
                 board[i][j] = INTERSECTION;
             }
         }
 
         // Insert closed spots
-        for (int i = 1; i < board.length; i += 2) {
-            for (int j = 1; j < board[0].length; j += 2) {
+        for (int i = 2; i < board.length - 1; i += 2) {
+            for (int j = 2; j < board[0].length - 1; j += 2) {
                 board[i][j] = " " + CLOSED + " ";
+            }
+        }
+
+        // Insert horizontal indices
+        int index = 1;
+        for (int i = 0; i < board.length; i += 2) {
+            for (int j = 2; j < board[0].length - 1; j += 2) {
+                if (j == 2) {
+                    index = 1;
+                }
+                if (i == 0 || i == board.length - 1) {
+                    board[i][j] = Integer.toString(index);
+                    index++;
+                }
+            }
+        }
+
+        // Insert vertical indices
+        index = 1;
+        for (int i = 2; i < board.length - 1; i += 2) {
+            for (int j = 0; j < board[0].length; j += 1) {
+                if ( i == 2) {
+                    index = 1;
+                }
+                if (j == 0 || j == board[0].length - 1) {
+                    if (i < 19) {
+                        board[i][j] = " " + Integer.toString(index) + "  ";
+                    } else {
+                        board[i][j] = " " + Integer.toString(index) + " ";
+                    }
+                }
+            }
+            index++;
+        }
+
+        // Insert empty cells
+        board[0][0] = "   ";
+        board[0][board[0].length - 1] = "   ";
+        board[board.length - 1][0] = "   ";
+        board[board.length - 1][board[0].length - 1] = "   ";
+
+        // Horizontal empty cells
+        for (int i = 0; i < board.length; i += 2) {
+            for (int j = 1; j < board[0].length; j += 2) {
+                if (i == 0 || i == board.length - 1) {
+                    if (j < 19) {
+                        board[i][j] = "   ";
+                    } else {
+                        board[i][j] = "  ";
+                    }
+                }
+            }
+        }
+
+        // Vertical empty cells
+        for (int i = 1; i < board.length; i += 2) {
+            for (int j = 0; j < board[0].length; j += 2) {
+                if (j == 0 || j == board[0].length - 1) {
+                    board[i][j] = "    ";
+                }
             }
         }
         
